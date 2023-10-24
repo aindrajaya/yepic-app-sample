@@ -1,11 +1,10 @@
 import React from 'react';
 
-const LoadingOverlay = ({ color = 'blue-500', size = '16' }) => {
-  const spinnerClassName = `animate-spin rounded-full h-${size} w-${size} border-t-2 border-${color} border-r-2 border-b-2 border-gray-300`;
-
+const LoadingOverlay = ({ state }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 opacity-50">
-      <div className={spinnerClassName}></div>
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-gray-600"></div>
+      {state === "process" && <h1 className="mt-4 text-gray-700">Video is processing...</h1>}
     </div>
   );
 };
