@@ -10,7 +10,7 @@ const Header = () => {
             <div className="flex items-center">
               {/* Use the Image component for your logo */}
               <Image
-                src="/next.svg" // Path to your PNG image in the public directory
+                src="https://files.readme.io/d7307ef-small-yepic-api.png" // Path to your PNG image in the public directory
                 alt="Image Voiceover Generator Logo"
                 width={80} // Set the desired width
                 height={80} // Set the desired height
