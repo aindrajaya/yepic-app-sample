@@ -9,15 +9,11 @@ import AvatarListModal from './components/AvatarListModal';
 
 export default function Home() {
   const router = useRouter();
-  const [image, setImage] = useState(null);
-  const [voiceover, setVoiceover] = useState('');
-  const [imagePreview, setImagePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   //Request body to sent
   const [script, setScript] = useState('');
   const [videoTitle, setVideoTitle] = useState('');
-  const [resultVideoURL, setResultVideoURL] = useState('');
   const [result, setResult] = useState(null)
   const [avatarId, setAvatarId] = useState('');
   const [voiceId, setVoiceId] = useState('');
@@ -28,23 +24,9 @@ export default function Home() {
   const [avatarData, setAvatarData] = useState(null);
   const [onSelectImage, setOnSelectImage] = useState(null);
 
-  console.log(onSelectImage, "onSelectImage data image yg dipilih")
-  console.log(avatarId, "Id yg terpilih")
-
-  const handleImageChange = (e) => {
-    const selectedImage = e.target.files[0];
-    setImage(selectedImage);
-
-    // Create a preview URL for the selected image
-    const previewURL = URL.createObjectURL(selectedImage);
-    setImagePreview(previewURL);
-  };
-
   const handleRemoveImage = () => {
     // Clear the selected image and its preview
     setOnSelectImage(null)
-    setImage(null);
-    setImagePreview(null);
   };
 
   const handleGenerateVoiceover = async () => {
@@ -53,11 +35,11 @@ export default function Home() {
       toast("You must enter a video title");
       return;
     }
-    // if (!image ) {
-      // You can add validation or display an error message if the title is empty
-      // toast("You must select an image");
-      // return;
-    // }
+    if (!onSelectImage ) {
+      //You can add validation or display an error message if the title is empty
+      toast("You must select an image");
+      return;
+    }
     if (!script || script === '') {
       // You can add validation or display an error message if the title is empty
       toast("You must enter some text");  
@@ -94,12 +76,6 @@ export default function Home() {
     } catch (error) {
       console.error('Internal Server Error:', error);
     }
-
-    // setTimeout(() => {
-    //   setIsLoading
-    //   // router.push(`/pages/results/${videoTitle}`);
-    //   router.push(`/pages/results/${videoTitle}/${script}`)
-    // }, 2000);
   }
   
   const gotoResultPage = (id) => {
@@ -145,14 +121,16 @@ export default function Home() {
     <div>
       <Header />
       {result ? (
-        <main className="bg-gray-100 flex min-h-screen flex-col items-center justify-between p-24">
-          <h1 className="text-2xl text-black font-semibold">Success to input your data, your Id is {result.id}</h1>
-          <button 
-            onClick={() => gotoResultPage(result.id)}
-            className="bg-purple-500 hover:bg-purple-600 text-white rounded px-4 py-2 w-full"
-            >
-            Click here to see the result
-          </button>
+        <main className="bg-gray-100 flex min-h-screen flex-col items-center justify-start p-24">
+          <div className="bg-white rounded shadow-md p-6 text-center">
+            <h1 className="text-2xl text-black font-semibold mb-10">Success to input your data, your Id is {result.id}</h1>
+            <button 
+              onClick={() => gotoResultPage(result.id)}
+              className="bg-purple-500 hover:bg-purple-600 text-white rounded px-4 py-2 w-full"
+              >
+              Click here to see the result
+            </button>
+          </div>
         </main>
       ):(
         <main className="bg-gray-100 flex min-h-screen flex-col items-center justify-between p-24">
@@ -171,6 +149,7 @@ export default function Home() {
             <div className="bg-white p-8 rounded shadow-md w-96">
               <h1 className="text-2xl text-black font-semibold mb-4">Image Voiceover Generator</h1>
 
+              {/* This is the feature to upload image -> Maybe can be implemented later on */}
               {/* <div className="mb-4 relative" id="file-input-container">
                 Input for image selection
                 <input
@@ -241,16 +220,6 @@ export default function Home() {
                 >
                   Generate Voiceover
                 </button>
-              )}
-
-              {voiceover && (
-                <div className="mt-4">
-                  <p className="text-gray-600">Generated Voiceover:</p>
-                  <audio controls>
-                    <source src={voiceover} type="audio/mpeg" />
-                    Your browser does not support the audio element.
-                  </audio>
-                </div>
               )}
             </div>
           </div>
