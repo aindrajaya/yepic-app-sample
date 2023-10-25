@@ -1,26 +1,38 @@
 "use client"
-
 import Header from "@/app/components/Header"
+import LoadingOverlay from "@/app/components/Overlay"
+import { useEffect, useState } from "react"
 
 export default function Page({ params }) {
-  const videoTitle = decodeURIComponent(params.slug)
+  const id = params.slug
+  const [data, setData] = useState()
 
-  console.log(videoTitle)
-  const voiceover = "data"
-  const videoUrl = "data"
+  async function fetchData(){
+    try {
+      const response = await fetch(`/api/express/video?id=${id}`)
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+ 
+  useEffect(() => {
+    fetchData()
+  }, [data])
 
-  if (!videoUrl) {
-    return <p>Loading...</p>;
+  if (!data) {
+    return <LoadingOverlay state={"process"}/>
   }
   return (
     <div>
       <Header />
       <div className="bg-gray-100 min-h-screen flex items-start justify-center">
         <div className="bg-white p-8 rounded shadow-md w-96 mt-10">
-          <h1 className="text-2xl text-gray-700 font-semibold mb-4">Title is:  {`${videoTitle}`}</h1>
+          <h1 className="text-2xl text-gray-700 font-semibold mb-4">Title is:  {data.videoTitle}</h1>
           <div className="bg-gray-300 p-4 rounded-md mb-4">
             <video controls className="w-full">
-              <source src={voiceover} type="video/mp4" />
+              <source src={data.videoUrl} type="video/mp4" />
               Your browser does not support the video element.
             </video>
           </div>
@@ -29,7 +41,7 @@ export default function Page({ params }) {
             <div className="flex items-center">
               <input
                 type="text"
-                value={voiceover}
+                value={data.videoUrl}
                 className="flex-1 p-2 rounded-l-md border"
                 readOnly
               />
@@ -40,7 +52,6 @@ export default function Page({ params }) {
           </div>
         </div>
       </div>
-    </div>
-   
+    </div>    
  );
 }
