@@ -35,24 +35,28 @@ const AvatarListModal = ({ isOpen, onRequestClose, avatarList, onSelectImage, se
           maxWidth: '400px', // Limit the maximum width
           maxHeight: '80%', // Limit the maximum height
           padding: '20px', // Add padding
+          borderRadius: '10px', // Rounded border
+          borderColor: "purple"
         },
       }}
     >
       <h2 className="text-lg font-semibold mb-4">Avatar List</h2>
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap justify-center">
         {avatarList.slice(6, 11).map((avatar) => (
           <img
             key={avatar.id}
             src={avatar.menuImageUrl}
             alt={`Avatar ${avatar.id}`}
-            className={`w-20 h-20 m-2 cursor-pointer ${avatar === selectedImage ? 'border-4 border-blue-500' : ''}`}
+            className={`w-20 h-20 m-2 cursor-pointer border-2 rounded-md ${avatar === selectedImage ? 'border-4 border-purple-500' : ''}`}
             onClick={() => handleImageSelect(avatar)}
           />
         ))}
       </div>
-      <button onClick={handleConfirm} className="mt-4 bg-blue-500 text-white rounded-md p-2">
-        Confirm
-      </button>
+      <div className="flex flex-wrap justify-center">
+        <button onClick={handleConfirm} className="w-full mt-4 bg-purple-500 text-white rounded-md p-2">
+          Confirm
+        </button>
+      </div>
     </Modal>
   );
 };
