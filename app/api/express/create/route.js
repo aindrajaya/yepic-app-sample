@@ -25,7 +25,7 @@ export async function POST(request) {
     avatarUrl: null,
     fullFrame: true,
     dynamic: false,
-    voiceId: trialVoice,
+    voiceId: voiceId,
     voiceOverId: null,
     voiceOverName: null,
     voiceOverUrl: null,
