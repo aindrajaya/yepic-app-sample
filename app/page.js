@@ -1,9 +1,10 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import Header from './components/Header';
 import LoadingOverlay from './components/Overlay';
+import Dropdown from './components/Dropdown';
 
 export default function Home() {
   const router = useRouter();
@@ -17,8 +18,11 @@ export default function Home() {
   const [videoTitle, setVideoTitle] = useState('');
   const [resultVideoURL, setResultVideoURL] = useState('');
   const [result, setResult] = useState(null)
+  const [avatarId, setAvatarId] = useState('');
+  const [voiceId, setVoiceId] = useState('');
+  const [voiceData, setVoiceData] = useState(null);
 
-  console.log(resultVideoURL)
+  console.log(voiceData, "data voice")
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -55,7 +59,7 @@ export default function Home() {
 
     const requestBody = {
       // avatarId,
-      // voiceId,
+      voiceId,
       script,
       videoTitle,
     };
@@ -94,6 +98,20 @@ export default function Home() {
     router.push(`/pages/results/${id}`)
   }
 
+  // To check data is picked on parent component
+  const handlePickedList = (item) => {
+    alert(item)
+  }
+
+  useEffect(() => {
+    async function fetchVoiceData(){
+      const response = await fetch('/api/voices/');
+      const data = await response.json();
+      setVoiceData(data)
+    }
+    fetchVoiceData()
+  }, []);
+
   return (
     <div>
       <Header />
@@ -131,7 +149,7 @@ export default function Home() {
               {/* Display image preview if available */}
               {imagePreview && (
                 <div className="mb-4">
-                  <label className="block text-gray-600">Image Preview:</label>
+                  <label className="block text-base font-medium text-gray-600">Image Preview:</label>
                   <img src={imagePreview} alt="Image Preview" className="border rounded px-3 py-2 w-full mr-4 my-3" />
                   <button
                     onClick={handleRemoveImage}
@@ -142,9 +160,11 @@ export default function Home() {
                 </div>
               )}
 
+              <Dropdown menuDatas={voiceData} setPickdata={setVoiceId}/>
+
               {/* Input for Video Title */}
               <div className="mb-4">
-                <label htmlFor="videoTitle" className="block text-gray-600">Video Generated Title:</label>
+                <label htmlFor="videoTitle" className="block text-gray-600 text-base font-medium">Video Generated Title:</label>
                 <input
                   type="text"
                   id="videoTitle"
@@ -155,7 +175,7 @@ export default function Home() {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="text" className="block text-gray-600">Voiceover Text:</label>
+                <label htmlFor="text" className="block text-gray-600 text-base font-medium">Script Text:</label>
                 <textarea
                   id="text"
                   value={script}
