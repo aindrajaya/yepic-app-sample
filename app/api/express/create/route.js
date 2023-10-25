@@ -10,8 +10,6 @@ export async function POST(request) {
    */
 
   const { avatarId, voiceId, script, videoTitle } = await request.json();
-  const trialAvatar = "fad8c893-58ed-4855-b099-336580ec910f"
-  const trialVoice = "en-US-JennyMultilingualNeural"
 
   const requestBody = {
     storageProvider: 'Gcs',
