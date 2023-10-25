@@ -20,7 +20,7 @@ export async function POST(request) {
     draft: false,
     videoUrl: null,
     videoWatermarkedUrl: null,
-    avatarId: trialAvatar,
+    avatarId: avatarId,
     avatarName: null,
     avatarUrl: null,
     fullFrame: true,

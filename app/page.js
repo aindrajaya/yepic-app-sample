@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import Header from './components/Header';
 import LoadingOverlay from './components/Overlay';
 import Dropdown from './components/Dropdown';
+import AvatarListModal from './components/AvatarListModal';
 
 export default function Home() {
   const router = useRouter();
@@ -20,9 +21,15 @@ export default function Home() {
   const [result, setResult] = useState(null)
   const [avatarId, setAvatarId] = useState('');
   const [voiceId, setVoiceId] = useState('');
-  const [voiceData, setVoiceData] = useState(null);
 
-  console.log(voiceData, "data voice")
+  //Data listed
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [voiceData, setVoiceData] = useState(null);
+  const [avatarData, setAvatarData] = useState(null);
+  const [onSelectImage, setOnSelectImage] = useState(null);
+
+  console.log(onSelectImage, "onSelectImage data image yg dipilih")
+  console.log(avatarId, "Id yg terpilih")
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -35,6 +42,7 @@ export default function Home() {
 
   const handleRemoveImage = () => {
     // Clear the selected image and its preview
+    setOnSelectImage(null)
     setImage(null);
     setImagePreview(null);
   };
@@ -58,7 +66,7 @@ export default function Home() {
     setIsLoading(true);
 
     const requestBody = {
-      // avatarId,
+      avatarId,
       voiceId,
       script,
       videoTitle,
@@ -103,6 +111,7 @@ export default function Home() {
     alert(item)
   }
 
+  //Get voices data
   useEffect(() => {
     async function fetchVoiceData(){
       const response = await fetch('/api/voices/');
@@ -111,6 +120,26 @@ export default function Home() {
     }
     fetchVoiceData()
   }, []);
+
+  //Get avatar data
+  useEffect(() => {
+    async function fetchAvatarData(){
+      const response = await fetch('/api/avatars/');
+      const data = await response.json();
+      setAvatarData(data)
+    }
+    fetchAvatarData()
+  }, []);
+
+  console.log(avatarData, "avatar data")
+  const avatarList = [
+    'avatar1.jpg',
+    'avatar2.jpg',
+    'avatar3.jpg',
+    'avatar4.jpg',
+    'avatar5.jpg',
+    // Add more avatar URLs as needed
+  ];
 
   return (
     <div>
@@ -130,11 +159,20 @@ export default function Home() {
           {isLoading && <LoadingOverlay state={"none"}/>}
           <ToastContainer />
           <div className="min-h-screen flex items-start justify-center">
+          {avatarData && (
+            <AvatarListModal
+              isOpen={isModalOpen}
+              onRequestClose={() => setIsModalOpen(false)}
+              avatarList={avatarData}
+              onSelectImage={setOnSelectImage}
+              setAvatarId={setAvatarId}
+            />
+          )}
             <div className="bg-white p-8 rounded shadow-md w-96">
               <h1 className="text-2xl text-black font-semibold mb-4">Image Voiceover Generator</h1>
 
-              <div className="mb-4 relative" id="file-input-container">
-                {/* Input for image selection
+              {/* <div className="mb-4 relative" id="file-input-container">
+                Input for image selection
                 <input
                   type="file"
                   id="image"
@@ -143,14 +181,20 @@ export default function Home() {
                 />
                 <label htmlFor="image" className="bg-purple-500 hover:bg-purple-600 text-white text-lg rounded px-4 py-2 w-full cursor-pointer">
                   Choose Image to Generate
-                </label> */}
-              </div>
+                </label>
+              </div> */}
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-purple-500 hover:bg-purple-600 text-white rounded px-4 py-2 w-full"
+              >
+                Choose Avatar to Generate
+              </button>
 
               {/* Display image preview if available */}
-              {imagePreview && (
+              {onSelectImage && (
                 <div className="mb-4">
                   <label className="block text-base font-medium text-gray-600">Image Preview:</label>
-                  <img src={imagePreview} alt="Image Preview" className="border rounded px-3 py-2 w-full mr-4 my-3" />
+                  <img src={onSelectImage.menuImageUrl} alt="Image Preview" className="border rounded px-3 py-2 w-full mr-4 my-3" />
                   <button
                     onClick={handleRemoveImage}
                     className="bg-red-500 hover-bg-red-600 text-white rounded px-4 py-2 w-full"
