@@ -3,7 +3,61 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { ToastContainer, toast } from "react-toastify";
 
 const ContactForm = ({handleGenerateVoiceover}) => {
-  
+  const [formData, setFormData] = useState({
+    name: "",
+    company: "",
+  });
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const formSteps = ["name", "company"];
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleNext = () => {
+    if (currentStep < formSteps.length - 1) {
+      if(formData[formSteps[currentStep]] === ""){
+        toast.error(`Please enter your ${formSteps[currentStep]}`,{
+          position: toast.POSITION.TOP_CENTER,
+        })
+        setCurrentStep(currentStep);  
+      } else {
+        setCurrentStep(currentStep + 1);
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (currentStep === formSteps.length - 1) {
+      const isFormEmpty = Object.values(formData).some((value) => value === "");
+      if(isFormEmpty){
+        toast.error("Please fill in all fields",{
+          position: toast.POSITION.TOP_CENTER,
+        });
+      } else {
+        // console.log("Form data:", formData);
+        setIsSubmitted(true);
+        handleGenerateVoiceover(formData.name, formData.company)
+        // alert(`Hello ${formData.name} Form submitted!`);
+      }
+    }
+  };
+
+  const handleClear = () => {
+    setFormData({
+      name: "",
+      company: "",
+    });
+    setIsSubmitted(false);
+    setCurrentStep(0);
+  };
+
   return (
     <div className="w-96 mx-auto mt-8 p-4 bg-white shadow-md rounded-lg text-gray-700">
       <h2 className="text-2xl font-semibold mb-4">Please Introduce Yourself</h2>
