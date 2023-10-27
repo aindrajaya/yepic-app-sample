@@ -9,7 +9,12 @@ export async function POST(request) {
    * 
    */
 
-  const { avatarId, voiceId, script, videoTitle } = await request.json();
+  const {nama, company } = await request.json();
+
+  // console.log(nama, company, "data dari form POST")
+
+  const trialAvatar = "fad8c893-58ed-4855-b099-336580ec910f"
+  const trialVoice = "en-US-JennyMultilingualNeural"
 
   const requestBody = {
     storageProvider: 'Gcs',
@@ -18,22 +23,22 @@ export async function POST(request) {
     draft: false,
     videoUrl: null,
     videoWatermarkedUrl: null,
-    avatarId: avatarId,
+    avatarId: trialAvatar,
     avatarName: null,
     avatarUrl: null,
     fullFrame: true,
     dynamic: false,
-    voiceId: voiceId,
+    voiceId: trialVoice,
     voiceOverId: null,
     voiceOverName: null,
     voiceOverUrl: null,
-    script: script,
+    script: `Hello, my name is ${nama} from ${company}. I am testing Yepic AI video. I hope you like it`,
     speechVolume: null,
     speechSpeed: null,
     videoFormat: 'mp4',
     videoWidth: 1080,
     videoHeight: 1920,
-    videoTitle: videoTitle,
+    videoTitle: `Video Generated fom ${nama}`,
     visibility: 'Public',
     backgroundColor: null,
     backgroundImageId: null,
