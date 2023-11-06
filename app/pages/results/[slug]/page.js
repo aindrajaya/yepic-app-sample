@@ -1,20 +1,21 @@
 "use client"
-import Header from "@/app/components/Header"
-import LoadingOverlay from "@/app/components/Overlay"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
+import Header from "@/app/components/Header";
+import LoadingOverlay from "@/app/components/Overlay";
 
 export default function Page({ params }) {
-  const id = params.slug
-  const [data, setData] = useState()
+  const id = params.slug;
+  const [data, setData] = useState();
   const [notReady, setNotReady] = useState(null);
   const [videoUrl, setVideoUrl] = useState(null);
+  const [copySuccess, setCopySuccess] = useState(false);
 
-  console.log(notReady, "notReady status")
+  console.log(notReady, "notReady status");
 
   useEffect(() => {
-    async function fetchData(){
+    async function fetchData() {
       try {
-        const response = await fetch(`/api/express/video?id=${id}`)
+        const response = await fetch(`/api/express/video?id=${id}`);
         const data = await response.json();
         setData(data);
         setVideoUrl(data.videoWatermarkedUrl);
@@ -23,8 +24,8 @@ export default function Page({ params }) {
       }
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   useEffect(() => {
     fetch(videoUrl)
@@ -36,19 +37,33 @@ export default function Page({ params }) {
       .catch((error) => {
         setNotReady(error.message); // Set the error message
       });
-  }, [videoUrl])
+  }, [videoUrl]);
 
-  // if (!data) {
-  //   return <LoadingOverlay state={"process"}/>
-  // }
+  const handleCopyClick = () => {
+    if (data) {
+      // Create a temporary input element to copy the URL
+      const tempInput = document.createElement("input");
+      tempInput.value = data.videoWatermarkedUrl;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+
+      // Set copySuccess to true to indicate a successful copy
+      setCopySuccess(true);
+    }
+  };
+
   return (
     <div>
       <Header />
       <div className="bg-gray-100 min-h-screen flex items-start justify-center">
-        {!data && (<LoadingOverlay state={"process"}/>)}
+        {!data && <LoadingOverlay state={"process"} />}
         {data && (
           <div className="bg-white p-8 rounded shadow-md w-96 mt-10">
-            <h1 className="text-2xl text-gray-700 font-semibold mb-4">Title is:  {data.videoTitle}</h1>
+            <h1 className="text-2xl text-gray-700 font-semibold mb-4">
+              Title is: {data.videoTitle}
+            </h1>
             <div className="bg-gray-300 p-4 rounded-md mb-4">
               {notReady ? (
                 <h1>Video is not ready yet!</h1>
@@ -68,14 +83,19 @@ export default function Page({ params }) {
                   className="flex-1 p-2 rounded-l-md border"
                   readOnly
                 />
-                <button className="bg-purple-500 text-white p-2 rounded-r-md">
-                  Copy
+                <button
+                  className={`bg-purple-500 text-white p-2 rounded-r-md ${
+                    copySuccess ? "bg-green-500" : ""
+                  }`}
+                  onClick={handleCopyClick}
+                >
+                  {copySuccess ? "Copied" : "Copy"}
                 </button>
               </div>
             </div>
           </div>
         )}
       </div>
-    </div>    
- );
+    </div>
+  );
 }
