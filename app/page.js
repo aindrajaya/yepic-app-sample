@@ -7,6 +7,7 @@ import LoadingOverlay from './components/Overlay';
 import Dropdown from './components/Dropdown';
 import AvatarListModal from './components/AvatarListModal';
 import ContactForm from './components/Transform';
+import SimpleForm from './components/SimpleForm';
 
 export default function Home() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function Home() {
     setOnSelectImage(null)
   };
 
-  const handleGenerateVoiceover = async (nama, company) => {
+  const handleGenerateVoiceover = async (nama, email) => {
     // if (!videoTitle || videoTitle === '') {
     //   // You can add validation or display an error message if the title is empty
     //   toast("You must enter a video title");
@@ -54,7 +55,8 @@ export default function Home() {
       // script,
       // videoTitle,
       nama,
-      company
+      // company
+      email
     };
 
     const options = {
@@ -231,7 +233,8 @@ export default function Home() {
         <main>
           {isLoading && <LoadingOverlay state={"none"}/>}
           <div className="bg-gray-100 min-h-screen flex items-start justify-center">
-            <ContactForm handleGenerateVoiceover={handleGenerateVoiceover}/>
+            {/* <ContactForm handleGenerateVoiceover={handleGenerateVoiceover}/> */}
+            <SimpleForm handleGenerateVoiceover={handleGenerateVoiceover} isLoading={isLoading}/>
           </div>
         </main>
       )}
