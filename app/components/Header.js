@@ -16,7 +16,7 @@ const Header = () => {
                 height={80} // Set the desired height
               />
               <text className="px-10">
-                Image Voiceover Generator
+              Email Video Generator 
               </text>
               
             </div>
