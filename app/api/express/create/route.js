@@ -9,7 +9,18 @@ export async function POST(request) {
    * 
    */
 
-  const {nama, company } = await request.json();
+  const {nama, email } = await request.json();
+
+  //Send to email the video result to email
+  /**
+   * POST /api/express/send-email
+   * @param {string} nama - The name of the recipient.
+   * @param {string} email - The email of the recipient.
+   * @param {string} videoTitle - The title of the video.
+   * @param {string} videoUrl - The url of the video.
+   * 1. This function will send the email to the recipient
+   * 2. We could using Sendgrid or Mailgun to send the email
+   */
 
   // console.log(nama, company, "data dari form POST")
 
@@ -32,7 +43,7 @@ export async function POST(request) {
     voiceOverId: null,
     voiceOverName: null,
     voiceOverUrl: null,
-    script: `Hello, my name is ${nama} from ${company}. I am testing Yepic AI video. I hope you like it`,
+    script: `Hello, my name is ${nama}. I am testing Yepic AI video. I hope you like it`,
     speechVolume: null,
     speechSpeed: null,
     videoFormat: 'mp4',
